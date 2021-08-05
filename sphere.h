@@ -15,7 +15,7 @@ struct hit_eq {
     double half_b;
     double c;
     vec3 oc; // this is the A-C in the equation
-    double det;
+    double delta;
 };
 
 hit_eq hit_sphere(const point3& center, double radius, const ray& r){
@@ -24,13 +24,13 @@ hit_eq hit_sphere(const point3& center, double radius, const ray& r){
     eq.a = dot(r.direction(), r.direction());
     eq.half_b = dot(r.direction(), eq.oc); //dot product property, switching the orders its the same
     eq.c = eq.oc.length_squared() - radius*radius; //vector dotted with itself is its squared len
-    eq.det = eq.half_b * eq.half_b - eq.a*eq.c;
+    eq.delta = eq.half_b * eq.half_b - eq.a*eq.c;
 
-    if(!eq.det) {
+    if(!eq.delta) {
         eq.nsol = 1;
-    } else if (eq.det > 0) {
+    } else if (eq.delta > 0) {
         eq.nsol = 2;
-    } else if (eq.det < 0) {
+    } else if (eq.delta < 0) {
         eq.nsol = 0;
     }
     return eq;
@@ -52,7 +52,7 @@ bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &rec) cons
     auto eq = hit_sphere(center, radius, r);
     if(eq.nsol == 0) return false;
 
-    auto sqrtd = sqrt(eq.det);
+    auto sqrtd = sqrt(eq.delta);
     auto root = (-eq.half_b - sqrtd) / eq.a;
     if(root < t_min || t_max < root) {
         root = (-eq.half_b + sqrtd) / eq.a;
