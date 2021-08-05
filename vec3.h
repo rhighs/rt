@@ -100,3 +100,8 @@ inline vec3 unit_vector(vec3 v) {
     return v / v.length();
 }
 
+inline vec3 *zero_vector() {
+    return new vec3(0,0,0);
+}
+
+
