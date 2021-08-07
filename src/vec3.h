@@ -1,5 +1,7 @@
 #pragma once
 
+#include "consts.h"
+
 #include <cmath>
 #include <iostream>
 
@@ -43,6 +45,14 @@ class vec3
 
         double length_squared() const {
             return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
+        }
+
+        inline static vec3 random() {
+            return vec3(randouble(), randouble(), randouble());
+        }
+
+        inline static vec3 random(double min, double max) {
+            return vec3(randouble(min, max), randouble(min, max), randouble(min, max));
         }
 
         std::ostream &operator<<(std::ostream &out){
@@ -104,4 +114,12 @@ inline vec3 *zero_vector() {
     return new vec3(0,0,0);
 }
 
+inline vec3 rand_unit_sphere() {
+    while(true) {
+        auto point = vec3::random(-1, 1);
+        if (point.length() >= 1) 
+            continue;
+        return point;
+    }
+}
 
