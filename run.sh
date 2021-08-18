@@ -1,4 +1,5 @@
 #!/bin/bash
+make
 OUTDIR="./out/"
 OUTNAME="out.ppm"
 OUT=${OUTDIR}${OUTNAME}
