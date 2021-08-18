@@ -12,8 +12,8 @@ color ray_color(const ray& r, const hittable &w, int depth) {
     hit_record rec;
     if (depth <= 0)
         return color(0,0,0);
-    if (w.hit(r, 0, inf, rec)) {
-        point3 target = rec.p + rec.normal + rand_unit_sphere();
+    if (w.hit(r, 0.001, inf, rec)) {
+        point3 target = rec.p + rec.normal + random_unit_vec(); //picked in the unit sphere surface
         return 0.5 * ray_color(ray(rec.p, target - rec.p), w, depth - 1); //fix negatives, might fuck up colors
     }
     vec3 unit_direction = unit_vector(r.direction());
@@ -21,7 +21,7 @@ color ray_color(const ray& r, const hittable &w, int depth) {
     return (1.0-t)*color(1.0, 1.0, 1.0) + t*color(0.5, 0.7, 1.0);
 }
 
-int main() {
+int main(void) {
     // Image
     const int samples = 100;
     const int image_width = 400;
@@ -33,13 +33,14 @@ int main() {
     cam cam;
 
     hittable_list w;
-    w.add(make_shared<sphere>(point3(0,0,-1), 0.5));
+    w.add(make_shared<sphere>(point3(-0.5,0,-1), 0.5));
+    w.add(make_shared<sphere>(point3(0.5,0,-1), 0.5));
     w.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
 
     auto render = [&](){
         std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
         for (int j = image_height-1; j >= 0; --j) {
-            std::cerr << "\nScanlines remaining: " << j << ' ' << std::flush;
+            std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
             for (int i = 0; i < image_width; ++i) {
                 color pixel_color(0, 0, 0);
                 for (int s = 0; s < samples; ++s) {
@@ -53,6 +54,5 @@ int main() {
         }
         std::cerr << "\nDone.\n";
     };
-
     render();
 }

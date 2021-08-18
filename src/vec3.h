@@ -123,3 +123,6 @@ inline vec3 rand_unit_sphere() {
     }
 }
 
+inline static vec3 random_unit_vec() {
+    return unit_vector(rand_unit_sphere());
+}

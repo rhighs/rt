@@ -15,7 +15,7 @@ class cam {
             double aspect_ratio = 16.0 / 9.0;
             double viewport_height = 2.0;
             double viewport_width = aspect_ratio * viewport_height;
-            double focal_len = 0.5;
+            double focal_len = 1;
 
             origin = *zero_vector();
             horizontal = vec3(viewport_width, 0.0, 0.0);
