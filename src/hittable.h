@@ -4,14 +4,17 @@
 #include <memory>
 #include <vector>
 
+class material;
+
 using std::shared_ptr;
 using std::make_shared;
 
 struct hit_record {
+    double t;
     point3 p;
     vec3 normal;
-    double t;
     bool front_face; //the face directed towards the eye
+    shared_ptr<material> mat_ptr;
 
     //implementation to set normal always point against eye at geometry time rather than color time
     inline void set_face_normal(const ray& r, const vec3& outward_normal) {
