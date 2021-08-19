@@ -59,6 +59,11 @@ class vec3
             return out << e[0] << ' ' << e[1] << ' ' << e[2];
         }
 
+        bool near_zero() const {
+            const auto s = 1e-8;
+            return (fabs(e[0]) < s && fabs(e[1]) < s && fabs(e[2]) < s);
+        }
+
     public:
         double e[3];
 };
@@ -126,3 +131,9 @@ inline vec3 rand_unit_sphere() {
 inline static vec3 random_unit_vec() {
     return unit_vector(rand_unit_sphere());
 }
+
+inline static vec3 reflect(const vec3 &v, const vec3& n) {
+    auto proj_vn = 2 * dot(-v, n) * n;
+    return (v + proj_vn);
+}
+
