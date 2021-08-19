@@ -133,7 +133,7 @@ inline static vec3 random_unit_vec() {
 }
 
 inline static vec3 reflect(const vec3 &v, const vec3& n) {
-    auto proj_vn = 2 * dot(-v, n) * n;
-    return (v + proj_vn);
+    auto proj_vn = dot(v, n) * n;
+    return v - 2*(proj_vn);
 }
 
