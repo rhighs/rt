@@ -137,3 +137,8 @@ inline static vec3 reflect(const vec3 &v, const vec3& n) {
     return v - 2*(proj_vn);
 }
 
+inline static vec3 random_in_hemisphere(const vec3 &normal) {
+    vec3 inus = rand_unit_sphere();
+    return dot(inus, normal) > 0.0 ? inus : -inus;
+}
+
