@@ -17,7 +17,7 @@ class material {
 
 class metal : public material {
     public:
-        metal(const color& a) : albedo(a) {}
+        metal(const color& a, const double f) : albedo(a), fuzz(f < 1 ? f : 1) {}
         virtual bool scatter(
             const ray &incoming,
             const hit_record &record,
@@ -25,12 +25,16 @@ class metal : public material {
             ray& scattered
         ) const override {
             vec3 reflected = reflect(unit_vector(incoming.direction()), record.normal);
-            scattered = ray(record.p, reflected);
+            //the bigger the fuzz, the bigger the reflection deviance is going to be,
+            //imagine a rough, unregular surface, with tiny little holes or bumps, thats
+            //exactly what we are describing with this fuzz addition.
+            scattered = ray(record.p, reflected + fuzz*rand_unit_sphere());
             attenuation = albedo;
             return dot(scattered.direction(), record.normal) > 0;
         }
 
     public:
+        double fuzz;
         color albedo;
 };
 
