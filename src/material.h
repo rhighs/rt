@@ -19,8 +19,8 @@ class metal : public material {
     public:
         metal(const color& a, const double f) : albedo(a), fuzz(f < 1 ? f : 1) {}
         virtual bool scatter(
-            const ray &incoming,
-            const hit_record &record,
+            ray const & incoming,
+            hit_record const & record,
             color &attenuation,
             ray& scattered
         ) const override {
@@ -36,6 +36,25 @@ class metal : public material {
     public:
         double fuzz;
         color albedo;
+};
+
+class dielectric : public material {
+    public:
+        dielectric(double idx_refr) : ir(idx_refr) {}
+
+        virtual bool scatter(
+            ray const & r_in, hit_record const & rec, color& attenuation, ray& scattered
+        ) const override {
+            attenuation = color(1.0, 1.0, 1.0);
+            //given by the type of material, be it glass, water, or any refracting material there is.
+            double refr_ratio = rec.front_face ? (1.0/ir) : ir;
+            vec3 unit_dir = unit_vector(r_in.direction());
+            vec3 refracted = refract(unit_dir, rec.normal, refr_ratio);
+            scattered = ray(rec.p, refracted);
+            return true;
+        };
+    private:
+        double ir;
 };
 
 class lambertian : public material {
