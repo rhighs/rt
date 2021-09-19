@@ -71,6 +71,8 @@ class vec3
 using point3 = vec3;
 using color = vec3;
 
+static vec3 const & zero_vector = vec3(0, 0, 0);
+
 std::ostream& operator<<(std::ostream &out, const vec3 &v) {
     return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
 }
@@ -115,10 +117,6 @@ vec3 unit_vector(vec3 v) {
     return v / v.length();
 }
 
-vec3 *zero_vector() {
-    return new vec3(0,0,0);
-}
-
 vec3 rand_unit_sphere() {
     while(true) {
         auto point = vec3::random(-1, 1);
@@ -153,3 +151,11 @@ vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat) {
     return r_out_perp + r_out_parallel;
 }
 
+vec3 refract_with_eta(vec3 const & normal, vec3 const & incident, double eta1, double eta2) {
+    double idx_ratio = eta1 / eta2;
+    double cosI = -dot(normal, incident); //incident must be already normalized
+    double sinT2 = idx_ratio * idx_ratio * (1 - cosI * cosI);
+    if(sinT2 > 1.0) return zero_vector;
+    double cosT = sqrt(1.0 - sinT2);
+    return idx_ratio * incident + (idx_ratio * cosI - cosT) * normal;
+}
